@@ -18,7 +18,7 @@ def userdata():
         shutil.rmtree("userdata")
     with zipfile.ZipFile("userdata.zip", 'r') as zip_ref:
         zip_ref.extractall("userdata")
-        print("Архив 'userdata.zip' распакован в 'userdata'")
+        # print("Архив 'userdata.zip' распакован в 'userdata'")
 
 
 userdata()
@@ -32,62 +32,37 @@ service = Service(executable_path=driver_path)
 driver = webdriver.Chrome(service=service, options=options)
 wait = WebDriverWait(driver, 100)
 
+def get_magic(driver, wait):
+    driver.get('https://zealy.io/cw/magicsquare-sqr-engage-to-earn/questboard/')
 
-# driver.get('https://zealy.io/cw/magicsquare-sqr-engage-to-earn/questboard/')
+    button = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/button[1]')))
+    button.click()
+    time.sleep(0.5)
 
-# button = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/button[1]')))
-# button.click()
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="08c54837-f08f-436a-9c06-336dfff54801"]/div[3]')))
+    button.click()
+    time.sleep(0.5)
+    time.sleep(3)
 
-# button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="08c54837-f08f-436a-9c06-336dfff54801"]/div[3]')))
-# button.click()
-# time.sleep(3)
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div[2]/div/div/div[2]')))
+    driver.execute_script("arguments[0].scrollIntoView(true);", element)
 
-# element = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div[2]/div/div/div[2]')))
-# driver.execute_script("arguments[0].scrollIntoView(true);", element)
+    wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[3]/div[2]/div/div/div[2]/div[1]/div/div[4]/div[2]/div[2]/div[1]/a'))).click()
+    time.sleep(0.5)
 
+    window_handles = driver.window_handles
+    driver.switch_to.window(window_handles[1])
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/aside/nav/div/button/span[1]"))).click()
+    time.sleep(0.5)
 
-# link = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[3]/div[2]/div/div/div[2]/div[1]/div/div[4]/div[2]/div[2]/div[1]/a')))
-# link.click()
-
-# window_handles = driver.window_handles
-# driver.switch_to.window(window_handles[1])
-# try:
-#     first_button_xpath = '/html/body/aside/nav/div/button/span[1]'
-#     wait.until(EC.element_to_be_clickable((By.XPATH, first_button_xpath))).click()
-# except Exception as e:
-#     print("Error:", e)
-
-# try:
-#     wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[12]/div/div/div/div/div[1]/button[1]"))).click()
-# except Exception as e:
-#     print("Error:", e)
-
-def create_metamask(driver, wait):
-    driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#onboarding/welcome')
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[1]/div/input"))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[2]/button"))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div/button[1]"))).click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[1]/label/input"))).send_keys("password123")
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[2]/label/input"))).send_keys("password123")
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[3]/label/input"))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/button"))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button[1]'))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/div/section/div[1]/div/div/label/input'))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/div/section/div[2]/div/button[2]'))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
-
-    driver.get("chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#seed")
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[3]/div/form/div/input"))).send_keys("password123")
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[3]/div/div[2]/button[2]'))).click()
-
-    actions = ActionChains(driver)
-    actions.click_and_hold(wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[3]/div/section/div/button")))).perform()
-    time.sleep(1)
-    actions.release(wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[3]/div/section/div/button")))).perform()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[3]/div/div[2]/div/div/div/button"))).click()
-
+    # try:
+    #     wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[12]/div/div/div/div/div[1]/button[1]"))).click()
+    time.sleep(0.5)
+    # except Exception as e:
+    #     print("Error:", e)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[11]/div/div/div/div/div[1]/button[1]"))).click()
+    time.sleep(0.5)
+    time.sleep(10)
 
 def copy_and_write_seeds():
     seeds = pyperclip.paste()
@@ -96,6 +71,52 @@ def copy_and_write_seeds():
         file.write(seeds+"\n")
 
 
-time.sleep(3)
+def create_metamask(driver, wait):
+    driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#onboarding/welcome')
+    window_handles = driver.window_handles
+    driver.switch_to.window(window_handles[-1])
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[1]/div/input"))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[2]/button"))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div/button[1]"))).click()
+    time.sleep(0.5)
+    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[1]/label/input"))).send_keys("password123")
+    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[2]/label/input"))).send_keys("password123")
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[3]/label/input"))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/button"))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button[1]'))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/div/section/div[1]/div/div/label/input'))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/div/section/div[2]/div/button[2]'))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
+    time.sleep(0.5)
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
+    time.sleep(0.5)
+
+    driver.get("chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#seed")
+    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[3]/div/form/div/input"))).send_keys("password123")
+    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[3]/div/div[2]/button[2]'))).click()
+    time.sleep(0.5)
+
+    actions = ActionChains(driver)
+    actions.click_and_hold(wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[3]/div/section/div/button")))).perform()
+    time.sleep(1)
+    actions.release(wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[3]/div/section/div/button")))).perform()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[3]/div/div[2]/div/div/div/button"))).click()
+    time.sleep(0.5)
+    copy_and_write_seeds()
+create_metamask(driver,wait)
+get_magic(driver, wait)
+
+
+
+time.sleep(30)
 
 driver.quit()
