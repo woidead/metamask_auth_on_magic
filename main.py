@@ -12,14 +12,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
+
 def userdata():
     if os.path.exists('userdata'):
         shutil.rmtree("userdata")
     with zipfile.ZipFile("userdata.zip", 'r') as zip_ref:
         zip_ref.extractall("userdata")
         print("Архив 'userdata.zip' распакован в 'userdata'")
-userdata()
 
+
+userdata()
 options = Options()
 options.add_argument("start-maximized")
 options.add_argument("MetaMask.crx")
@@ -55,12 +57,12 @@ wait = WebDriverWait(driver, 100)
 # except Exception as e:
 #     print("Error:", e)
 
-# try: 
+# try:
 #     wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[12]/div/div/div/div/div[1]/button[1]"))).click()
 # except Exception as e:
 #     print("Error:", e)
 
-def create_metamask():
+def create_metamask(driver, wait):
     driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#onboarding/welcome')
     wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[1]/div/input"))).click()
     wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[2]/button"))).click()
@@ -92,6 +94,7 @@ def copy_and_write_seeds():
     print(seeds)
     with open('seeds.txt', 'a') as file:
         file.write(seeds+"\n")
+
 
 time.sleep(3)
 
