@@ -6,6 +6,8 @@ test.py
 # C extensions
 *.so
 chromedriver.exe
+seeds.txt
+userdata
 
 # Distribution / packaging
 .Python
