@@ -8,7 +8,7 @@ test.py
 chromedriver.exe
 seeds.txt
 userdata
-
+*log*
 # Distribution / packaging
 .Python
 build/
