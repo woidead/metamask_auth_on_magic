@@ -5,50 +5,22 @@ import shutil
 import zipfile
 import pyperclip
 import requests
+import pyautogui
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from config import driver_path, delay
+from config import delay, password, ads_id
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
-
+from selenium.webdriver.common.keys import Keys
 
 import sys
-ads_id = "jg96jq6"
-open_url = f"http://local.adspower.net:50325/api/v1/browser/start?user_id={ads_id}"
-close_url = f"http://local.adspower.net:50325/api/v1/browser/stop?user_id={ads_id}"
-
-resp = requests.get(open_url).json()
-if resp["code"] != 0:
-    print(resp["msg"])
-    sys.exit()
-
-def userdata():
-    if os.path.exists('userdata'):
-        shutil.rmtree("userdata")
-    with zipfile.ZipFile("userdata.zip", 'r') as zip_ref:
-        zip_ref.extractall("userdata")
-        # print("Архив 'userdata.zip' распакован в 'userdata'")
 
 
-userdata()
-options = Options()
-options.add_argument("start-maximized")
-options.add_argument("MetaMask.crx")
-options.add_argument(f"user-data-dir={os.getcwd()}/userdata")
-options.add_experimental_option("debuggerAddress", resp["data"]["ws"]["selenium"])
-
-
-
-chrome_driver = resp["data"]["webdriver"]
-service = Service(executable_path=chrome_driver)
-driver = webdriver.Chrome(service=service, options=options)
-wait = WebDriverWait(driver, 100)
-
-def get_magic(driver, wait):
-    driver.get('https://zealy.io/cw/magicsquare-sqr-engage-to-earn/questboard/')
+def magic(driver, wait):
+    driver.get('https://bit.ly/3OCtyTm')
 
     button = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/button[1]')))
     button.click()
@@ -66,22 +38,30 @@ def get_magic(driver, wait):
     time.sleep(uniform(*delay))
 
     window_handles = driver.window_handles
-    driver.switch_to.window(window_handles[1])
-    # time.sleep(uniform(*delay))
+    driver.switch_to.window(window_handles[-1])
+    time.sleep(uniform(*delay))
     # driver.get("https://magic.store/?utm_source=Zealy&utm_medium=referral")
 
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/aside/a"))).click()
-    # time.sleep(uniform(*delay))
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/aside/nav/div/button/span[1]"))).click()
-
-    # # try:
-    # #     wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[12]/div/div/div/div/div[1]/button[1]"))).click()
-    # time.sleep(uniform(*delay))
-    # # except Exception as e:
-    # #     print("Error:", e)
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[11]/div/div/div/div/div[1]/button[1]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/aside/nav/div/button"))).click()
     time.sleep(uniform(*delay))
-    
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[10]/div/div/div/div/div[1]/button[1]"))).click()
+
+    try:
+        wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[12]/div/div/div/div/div[1]/button[1]"))).click()
+        time.sleep(uniform(*delay))
+    except Exception as e:
+        print("Error:", e)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[11]/div/div/div/div/div[1]/button[1]"))).click()
+    time.sleep(uniform(*delay))
+
+def auth(driver, wait):
+    driver.get("https://bit.ly/3OCtyTm")
+    time.sleep(uniform(*delay))
+    pyautogui.click((32, 989))
+    time.sleep(uniform(*delay))
+    pyautogui.click((920, 424))
+    time.sleep(uniform(*delay))
+    pyautogui.click((920, 424))
 
 def copy_and_write_seeds():
     seeds = pyperclip.paste()
@@ -90,59 +70,102 @@ def copy_and_write_seeds():
         file.write(seeds+"\n")
 
 
-def create_metamask(driver, wait):
+def create_metamask(driver):
     driver.get('chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#onboarding/welcome')
     # driver.close()
+    print(driver.title)
+    pyautogui.click((1094, 1062)) 
     window_handles = driver.window_handles
-    print(window_handles)
     driver.switch_to.window(window_handles[-1])
-    print(driver.title )
-    # time.sleep(200)
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[1]/div/input"))).click()
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/ul/li[2]/button"))).click()
+    pyautogui.click((869, 10))  
+
+    try:
+        pyautogui.click((863, 717))  
+    except Exception as e:
+        print(e)
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div/button[1]"))).click()
+    pyautogui.click((944, 799))
     time.sleep(uniform(*delay))
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[1]/label/input"))).send_keys("password123")
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[2]/label/input"))).send_keys("password123")
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/div[3]/label/input"))).click()
+    pyautogui.scroll(-1000)
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div/div[2]/form/button"))).click()
+    pyautogui.click((936, 921))
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button[1]'))).click()
+
+    # pyautogui.click((888, 692))
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/div/section/div[1]/div/div/label/input'))).click()
+    pyautogui.typewrite(password, interval=0.1)
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div/div/section/div[2]/div/button[2]'))).click()
+    # pyautogui.click((902, 884))
+    pyautogui.press('tab')
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
+    pyautogui.typewrite(password, interval=0.1)
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
+    pyautogui.press('tab')
+    pyautogui.press('space')
+    pyautogui.press('tab')
+    pyautogui.press('tab')
+    pyautogui.press('space')
     time.sleep(uniform(*delay))
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/button'))).click()
+
+
+    pyautogui.click((823, 841))
     time.sleep(uniform(*delay))
+
+    pyautogui.click((887, 571))
+    pyautogui.press('tab')
+    pyautogui.press('tab')
+    pyautogui.press('space')
+    time.sleep(uniform(*delay))
+
+    pyautogui.click((934, 807))
+    time.sleep(uniform(*delay))
+    pyautogui.click((963, 773))
+    time.sleep(uniform(*delay))
+    pyautogui.click((963, 773))
+
 
     driver.get("chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#seed")
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div[3]/div/form/div/input"))).send_keys("password123")
-    wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div[3]/div/div[2]/button[2]'))).click()
     time.sleep(uniform(*delay))
-
-    actions = ActionChains(driver)
-    actions.click_and_hold(wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[3]/div/section/div/button")))).perform()
+    pyautogui.typewrite(password, interval=0.1)
+    time.sleep(uniform(*delay))
+    pyautogui.press('enter')
+    time.sleep(uniform(*delay))
+    pyautogui.moveTo((892, 426))
+    pyautogui.mouseDown(button='left')
     time.sleep(1)
-    actions.release(wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[3]/div/section/div/button")))).perform()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[3]/div/div[2]/div/div/div/button"))).click()
+    pyautogui.mouseUp(button='left')
     time.sleep(uniform(*delay))
+    pyautogui.click((954, 871))
     copy_and_write_seeds()
 
-create_metamask(driver,wait)
-get_magic(driver, wait)
-time.sleep(200)
+open_url = f"http://local.adspower.net:50325/api/v1/browser/start?user_id={ads_id}"
+close_url = f"http://local.adspower.net:50325/api/v1/browser/stop?user_id={ads_id}"
 
-
-
+resp = requests.get(open_url).json()
+if resp["code"] != 0:
+    print(resp["msg"])
+    sys.exit()
+def userdata():
+    if os.path.exists('userdata'):
+        shutil.rmtree("userdata")
+    with zipfile.ZipFile("userdata.zip", 'r') as zip_ref:
+        zip_ref.extractall("userdata")
+        # print("Архив 'userdata.zip' распакован в 'userdata'")
+        
+userdata()
+options = Options()
+options.add_argument("start-maximized")
+options.add_argument("MetaMask.crx")
+options.add_argument(f"user-data-dir={os.getcwd()}/userdata")
+options.add_experimental_option("debuggerAddress", resp["data"]["ws"]["selenium"])
+pyautogui.FAILSAFE = False
+chrome_driver = resp["data"]["webdriver"]
+service = Service(executable_path=chrome_driver)
+driver = webdriver.Chrome(service=service, options=options)
+wait = WebDriverWait(driver, 100)
+create_metamask(driver) 
+auth(driver, wait)
 time.sleep(30)
-
 driver.quit()
 requests.get(close_url)
